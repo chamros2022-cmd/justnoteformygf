@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>7 Months With You 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#ffe3ec;--bg2:#fff4f0;--card:#ffffffcc;--ink:#5a2a3c;--soft:#9a5d74;--accent:#e8567f;--leaf:#6fb487;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a1030;--bg2:#40172f;--card:#3a1c3acc;--ink:#ffe6ee;--soft:#e8b4c8;--accent:#ff7aa2;--leaf:#4f9a6c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#2a1030;--bg2:#40172f;--card:#3a1c3acc;--ink:#ffe6ee;--soft:#e8b4c8;--accent:#ff7aa2;--leaf:#4f9a6c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:'Quicksand',system-ui,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));overflow-x:hidden;text-align:center}
+h1,h2,.script{font-family:'Dancing Script','Brush Script MT',cursive;font-weight:600}
+.screen{display:none;min-height:100vh;padding:28px 18px;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:2}
+.screen.on{display:flex}
+.card{background:var(--card);backdrop-filter:blur(8px);border-radius:28px;padding:32px 26px;max-width:420px;width:100%;box-shadow:0 12px 40px #e8567f33}
+.heart{font-size:56px;animation:beat 1.4s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+h1{font-size:48px;margin:8px 0;color:var(--accent)}
+p{line-height:1.6;color:var(--soft)}
+input{font:inherit;padding:12px 16px;border-radius:999px;border:2px solid var(--accent);background:transparent;color:var(--ink);width:100%;text-align:center;margin:10px 0 16px;outline:none}
+button{font:inherit;font-weight:600;padding:12px 28px;border:0;border-radius:999px;background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 6px 18px #e8567f55}
+button:active{transform:scale(.96)}
+h2{font-size:38px;margin:0;color:var(--accent)}
+.garden{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;max-width:620px;margin:18px 0 8px}
+.fl{width:30%;min-width:96px;max-width:140px;background:none;box-shadow:none;padding:0;position:relative}
+.fl svg{width:100%;height:auto;overflow:visible;filter:drop-shadow(0 4px 6px #0002)}
+.fl .petals{transform-origin:50px 50px;transform:scale(.35) rotate(0deg);transition:transform .9s cubic-bezier(.3,1.5,.5,1)}
+.fl.open .petals{transform:scale(1) rotate(25deg)}
+.fl:hover .petals{transform:scale(.55)}
+.fl.open:hover .petals{transform:scale(1.08) rotate(25deg)}
+.fl small{display:block;color:var(--soft);font-weight:600}
+.sway{transform-origin:50px 140px;animation:sway 4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.modal{position:fixed;inset:0;background:#0006;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal.on{display:flex}
+.note{animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.note .script{font-size:30px;color:var(--accent);margin:0 0 6px}
+.note p{font-size:18px;color:var(--ink)}
+.letter{display:none;margin-top:14px}
+.letter.on{display:block;animation:pop .8s}
+.petal{position:fixed;top:-30px;width:12px;height:16px;background:#ff9fbd;border-radius:80% 0 80% 0;opacity:.75;z-index:1;pointer-events:none;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(112vh) rotate(540deg) translateX(40px)}}
+</style>
+</head>
+<body>
+
+<section id="intro" class="screen on">
+  <div class="card">
+    <div class="heart">💗</div>
+    <h1>7 Months</h1>
+    <p>I made a little garden for someone special.<br>It’s for you, Vati 💗</p>
+    <input id="name" value="Vati" placeholder="Her name…" maxlength="24">
+    <button id="go">Open the garden 🌷</button>
+  </div>
+</section>
+
+<section id="garden" class="screen">
+  <h2 id="title">For you</h2>
+  <p>One flower for every month. Tap each one 🌸</p>
+  <div class="garden" id="beds"></div>
+  <p id="count">0 / 7 opened</p>
+  <div class="card letter" id="letter">
+    <div class="script" style="font-size:34px;color:var(--accent)">Happy 7 months, <span id="n2"></span> 💌</div>
+    <p id="final"></p>
+    <button id="again">Plant them again 🌱</button>
+  </div>
+</section>
+
+<div class="modal" id="modal"><div class="card note">
+  <div class="script" id="mt"></div>
+  <p id="mp"></p>
+  <button id="close">Keep it in my heart 💗</button>
+</div></div>
+
+<script>
+// ✏️ Edit these sweet notes to make them yours
+var NOTES=[
+ "Vati, you make ordinary days feel like my favorite days.",
+ "Your smile is my favorite place to rest my eyes.",
+ "Thank you for being patient with me, even when I’m not perfect.",
+ "Every little moment with you becomes a memory I keep.",
+ "I never say it enough, but I’m so proud of the person you are.",
+ "With you, I feel calm, happy, and truly like myself.",
+ "Seven months down, Vati, and I still choose you. Every single day."
+];
+var FINAL="I’m not always good at saying sweet things, but my heart is full of you. Thank you for 7 beautiful months. I love you, and I can’t wait for every month after this one. 🌹";
+var COLORS=["#ff8fab","#ffb3c6","#ffa94d","#c77dff","#ff6b81","#ffd166","#f783ac"];
+var opened={},$=function(i){return document.getElementById(i)};
+
+function flower(c,i){
+  var p="";
+  for(var k=0;k<8;k++)p+='<ellipse cx="50" cy="27" rx="11" ry="21" fill="'+c+'" opacity=".92" transform="rotate('+k*45+' 50 50)"/>';
+  return '<svg viewBox="0 0 100 150"><g class="sway"><path d="M50 55 C46 90 54 115 50 148" stroke="var(--leaf)" stroke-width="4" fill="none" stroke-linecap="round"/>'+
+  '<path d="M50 110 C30 100 24 105 20 92 C38 90 46 98 50 110Z" fill="var(--leaf)"/><path d="M50 125 C68 116 76 118 80 106 C62 104 54 112 50 125Z" fill="var(--leaf)"/>'+
+  '<g class="petals">'+p+'</g><circle cx="50" cy="50" r="10" fill="#ffd54a"/><circle cx="47" cy="47" r="3" fill="#fff6" /></g></svg>';
+}
+function build(){
+  opened={};$('count').textContent="0 / 7 opened";$('letter').classList.remove('on');
+  var h="";
+  for(var i=0;i<7;i++)h+='<button class="fl" data-i="'+i+'" aria-label="Open flower '+(i+1)+'">'+flower(COLORS[i],i)+'<small>Month '+(i+1)+'</small></button>';
+  $('beds').innerHTML=h;
+  var b=document.querySelectorAll('.fl');
+  for(var j=0;j<b.length;j++)b[j].onclick=function(){show(+this.getAttribute('data-i'),this)};
+}
+function show(i,el){
+  el.classList.add('open');opened[i]=1;
+  $('mt').textContent="Month "+(i+1)+" 🌸";$('mp').textContent=NOTES[i];
+  $('modal').classList.add('on');
+  var n=Object.keys(opened).length;$('count').textContent=n+" / 7 opened";
+}
+$('close').onclick=function(){
+  $('modal').classList.remove('on');
+  if(Object.keys(opened).length===7){$('letter').classList.add('on');$('letter').scrollIntoView({behavior:'smooth'})}
+};
+$('go').onclick=function(){
+  var n=$('name').value.trim()||"my love";
+  $('title').textContent="For "+n+" 🌷";$('n2').textContent=n;$('final').textContent=FINAL;
+  $('intro').classList.remove('on');$('garden').classList.add('on');build();
+};
+$('again').onclick=build;
+for(var k=0;k<16;k++){var d=document.createElement('div');d.className='petal';
+  d.style.left=Math.random()*100+'vw';d.style.animationDuration=(7+Math.random()*8)+'s';d.style.animationDelay=(-Math.random()*12)+'s';
+  d.style.background=COLORS[k%7];document.body.appendChild(d)}
+</script>
+</body>
+</html>
